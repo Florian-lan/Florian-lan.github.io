@@ -185,144 +185,8 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    <h2 id="任务管理"><a href="#任务管理" class="headerlink" title="任务管理"></a><strong>任务管理</strong></h2><ul>
-<li><p>内核是做什么的？             调度</p>
-</li>
-<li><p>内核调度什么？                任务</p>
-</li>
-<li><p>什么是任务？一个可以执行的软件，有代码 数据 计算资源。从代码的角度来说，task是一个无限循环的void函数，他会在内存当中不断地被调度，比如QQ一直在后台运行，直到你强制退出。 task是一个逻辑上的存在，并且是动态存在的，根据冯诺依曼体系，我们可以看出代码是存储执行的，即静态的，这也是task和code的主要区别。</p>
-<pre><code>A task is an executable software entity specialized to perform a special action which includes sequential code and relative data and computer resource 
-A task is an infinite loop function. it looks just like any other C function containing a return type and an argument but it must return. The return type of a task must always be declared to be void</code></pre></li>
-<li><p>任务的特点是什么？ 同步，异步，动态性</p>
-</li>
-</ul>
-<h3 id="一、如何描述一个任务？"><a href="#一、如何描述一个任务？" class="headerlink" title="一、如何描述一个任务？"></a>一、如何描述一个任务？</h3><ol>
-<li><p>从设计上看，任务就是应用程序中小任务对应的程序实体；从代码上看，就是一个函数；从存储结构上看，由<strong>任务程序代码、任务堆栈和任务控制块</strong> 组成。系统通过任务控制块来感知和控制任务；任务堆栈主要用来保护断点和恢复断点；任务代码是一个超循环结构，它描述了任务的执行过程。</p>
-</li>
-<li><p>代码描述：在RTOS中，任务是一个具有独立功能，无限循环的程序段的一次运行活动，是实时内核调度的基本单位</p>
-<p>​    <img src="https://i.loli.net/2020/08/09/dgaPfXhK7cWkuB9.png" alt="image.png"></p>
-</li>
-<li><p>任务和进程之间的区别？</p>
-<p>​    在uc/OS II 中，一个任务也称作一个线程，也就是说线程和进程有什么区别。因为Linux是多进程操作系统，因此和多人认为嵌入式操作系统也是多进程的，其实不然，真正的RTOS基本上没有实现进程，只是实现了多线程，因为多进程需要解决很多问题，还需要硬件支持，这样会使系统变得复杂，有可能影响系统的实时性。</p>
-<p>​    那么线程和进程之间究竟有什么区别呢？简单來说，线程之间是共享地址的。也就是说，当前线程的地址对于其他线程是可见的，如果修改了当前线程的地址，其他线程是可以知道并且能够访问的。</p>
-<p>​            <img src="https://i.loli.net/2020/08/09/MOuXsEn7DlWtwyU.png" alt="image.png"></p>
-<center>图1：创建任务执行test函数</center>
-
-<p>​            <img src="https://i.loli.net/2020/08/09/Nn1Pu4y2Q8BR7jU.png" alt="image.png"></p>
-<center>图2：创建进程执行test函数</center>
-
-<p>图1test函数输出为2，图2test函数输出为1。因为，如果采用多进程，则main()函数所在进程和test() 函数所在进程不能相互访问对方的变量。明明地址相同，为什么访问的值不一样呢?这是如何 实现的呢?有以下两种实现方式。</p>
-<p>​    (1) 地址保护。每个进程有独立的地址空间，如果当前进程跨界访问了其他进程的地址空 间，则程序会岀错。这种地址保护机制需要有存储器保护单元(Memory Protection Unit, MPU) 硬件的支持。</p>
-<p>​    (2) 虚拟地址。各个进程虽然都访问同一地址，但是由于虚拟地址机制的存在，它们对应 的物理地址是不相同的，所以读取的值也不相同。这种虚拟地址机制需要有内存管理单元 (Memory Management Unit, MMU)硬件的支持。</p>
-<p>其实这也间接说明了多进程的好处，那就是进程之间相互独立、隔离， •个进程的崩溃或 错误操作不会影响其他进程。当然这也会带来缺点，那就是无法直接访问全局变量，因为全局 变量都位于进程范围内，无法在进程之间共享，进程间的通信就变得困难。正因为如此， RTOS很少支持多进程，一是RTOS从单片机发展而来，硬件不支持;二是进程间通信互斥的 开销太大，导致系统复杂，对注重实时性的应用来说代价太大。</p>
-</li>
-<li><p>任务控制块——TCB</p>
-<p>一个任务的TCB共有10个成员，且共占用大小为20Bytes，具体如下：</p>
-<table>
-<thead>
-<tr>
-<th>数量</th>
-<th>成员</th>
-<th>类型</th>
-<th>占用大小</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>1</td>
-<td>OSTCBStkPtr</td>
-<td>OS_STK *</td>
-<td>4Bytes</td>
-<td>指向堆栈栈顶的指针</td>
-</tr>
-<tr>
-<td>2</td>
-<td>OSTCBNext</td>
-<td>struct os_tcb *</td>
-<td>4Bytes</td>
-<td>指向下一个TCB的指针</td>
-</tr>
-<tr>
-<td>3</td>
-<td>OSTCBPrev</td>
-<td>struct os_tcb *</td>
-<td>4Bytes</td>
-<td>指向上一个TCB的指针</td>
-</tr>
-<tr>
-<td>4</td>
-<td>OSTCBDly</td>
-<td>INT16U</td>
-<td>2Bytes</td>
-<td>任务延迟时间（节拍数）</td>
-</tr>
-<tr>
-<td>5</td>
-<td>OSTCBStat</td>
-<td>INT8U</td>
-<td>1Bytes</td>
-<td>任务状态</td>
-</tr>
-<tr>
-<td>6</td>
-<td>OSTCBPrio</td>
-<td>INT8U</td>
-<td>1Bytes</td>
-<td>任务优先级</td>
-</tr>
-<tr>
-<td>7</td>
-<td>OSTCBX</td>
-<td>INT8U</td>
-<td>1Bytes</td>
-<td>用于快速访问就绪队列的数据</td>
-</tr>
-<tr>
-<td>8</td>
-<td>OSTCBY</td>
-<td>INT8U</td>
-<td>1Bytes</td>
-<td>用于快速访问就绪队列的数据</td>
-</tr>
-<tr>
-<td>9</td>
-<td>OSTCBBitX</td>
-<td>INT8U</td>
-<td>1Bytes</td>
-<td>用于快速访问就绪队列的数据</td>
-</tr>
-<tr>
-<td>10</td>
-<td>OSTCBBitY</td>
-<td>INT8U</td>
-<td>1Bytes</td>
-<td>用于快速访问就绪队列的数据</td>
-</tr>
-</tbody></table>
-<ul>
-<li><p>OSTCBNext和OSTCBPrev</p>
-<p>这两个成员揭示了任务的存储方式即双向链表。为了方便，我们在boot初始化的时候就创建所有的TCB，64个（分别对应64个优先级）前两个是系统的优先级（用于处理紧急事件，比如掉电），后两个就是IDLE和系统监测（比如CPU温度）。所有的TCB都通过一个双向链表相连，称为TCBFreeList。如果TCB被某个对应优先级的task占用，就从Freelist到TCBList当中，代表正在使用的TCB。显而易见，双向链表虽然能自适应的调整空间，但是查询时很慢的，所有系统当中还维护一个优先级队列（实质上是一个数组） 数组下标和优先级一一对应。</p>
-</li>
-<li><p>OSTCBStat</p>
-<p>μC/OS-||任务的五种状态：睡眠状态、就绪状态、运行状态、等待状态、中断服务状态</p>
-<p><img src="https://i.loli.net/2020/08/09/DY5VGLeAFnIsfiP.png" alt="image.png"></p>
-</li>
-<li><p>OSTCBX OSTCBY OSTCBBitX OSTCBBitY，优先级位图法</p>
-<p>​    为解决调度时间的不确定性，使用优先级位图法。</p>
-<p>​    uC/OS [[支持64个优先级，分别对应优先级0〜63,具中0为最高优先级，63为最低优先级，每个优先级只对应一个任务。系统保留了 4个最高优先级任务和4个最低优先级任务， 用户可以使用的任务数为56个。首先，uC/OS II构造了一个逻辑上的优先级表，该表是一个方阵，一共有8 行，每行8个元素，分別代表八个优先级，优先级从右到左依次升高，优先级表如图所示</p>
-<p><img src="https://i.loli.net/2020/08/09/XgPoEFJ4LsqOcvh.png" alt="image.png"></p>
-<p>​    为了存储该优先级表，uC/OS II定义了以下两个变量:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OS_EXT INT8U PriorityReadyGroup</span><br><span class="line">OS EXT INT8U PriorityReadyTable[<span class="number">8</span>]</span><br></pre></td></tr></table></figure>
-
-<p>​    <strong>PriorityReadyGroup是一个8位二进制变量</strong>，其中的某一位对应优先级表的某一行。例如， 第0位对应优先级表的第0行，第1位对应优先级表的第1行，以此类推。PriorityReadyGroup 每一位的值要么为“1”，要么为“0” 。如果某一位为“1”，则意味着该位所对应行表示的优先级有就绪任务;如果某一位为“0”，则意味着该位所对应行表示的优先级没有就绪任务。例如，第1位为“1”，则意味着第1行表示的优先级(8〜15)有就绪任务:第4位为“0” ，则意味着第4行表示的优先级(32〜39)没有就绪任务。</p>
-<p>​    <strong>PriorityReadyTable[8]是一个8位二进制数组</strong>，数组的下标值均PriorityReadyGroup的位数对应。例如PriorityReadyTable[0]对应 PriorityReadyGroup 的第 0 位，即第1行，或优先级(0〜7) ; PriorityReadyTable[2]对应 PriorityReadyGroup 的第2位，即第2行，或优先级(16〜 23)。另外，PriorityReadyTable[v]的每个元素也是一个8位二进制变量，每一位对应该元素下标所对应行中某一列的优先级，其值要么为“1”，要么为“0”。如果某一位 为“1”，则意味着该元素下标所对应行的相应列的优先级有就绪任务;如果某一位为“0”， 则意味着该元素下标所对应行的相应列的优先级没有就绪任务。<strong>例如， PriorityReadyTable[0]=00000001,表示(第0行、第0列)对应的优先级(0号优先级)有就绪任务;PriorityReadyTable[3]=00001010,表示(第3行、第1列)和(第3行、第3列)对应 的优先级(分别为25、27号优先级)有就绪任务。</strong></p>
-<p>​    用PriorityReadyGroup和PriorityReadyTable[y]存储上图所示的优先级表，任务的优先级便可通过这两个变量来确定。uC/OS II也通过一个8位二进制变量来描述任务的优先级，其中，第 7 位和第6 位均为“0” ，高 3 位为某一优先级在 PriorityReadyGroup中指示的优先级表的行数，低 3 位为某优先级在PriorityReadyTable[y]中 指示的优先级表的列数，如下图所示。由这高3位和低3位构成的8位二进制数便可表示某一任务的优先级。例如,对于优先级35, PriorityReadyGroup的第4位(第4行 ,二进制表示 为100)为“1”，100将占用高3位，PriorityReadyTable[4]的第3位(第3列,二进制表示为 011)为“1” , 011将占用低3位，这样，00100011就构成了任务的优先级，即35号优先级。</p>
-<p><img src="https://i.loli.net/2020/08/09/XpAW4VZYB37mwQk.png" alt="image.png"></p>
-</li>
-</ul>
-</li>
-</ol>
-<h3 id="二、如何在-us-OS-II-中创建一个任务？"><a href="#二、如何在-us-OS-II-中创建一个任务？" class="headerlink" title="二、如何在 us/OS II 中创建一个任务？"></a>二、如何在 us/OS II 中创建一个任务？</h3><h3 id="三、如何在就绪队列中调度任务？"><a href="#三、如何在就绪队列中调度任务？" class="headerlink" title="三、如何在就绪队列中调度任务？"></a>三、如何在就绪队列中调度任务？</h3><h3 id="四、如何在（uc-OS-II-ARM-2440）中切换任务？"><a href="#四、如何在（uc-OS-II-ARM-2440）中切换任务？" class="headerlink" title="四、如何在（uc/OS II+ ARM 2440）中切换任务？"></a>四、如何在（uc/OS II+ ARM 2440）中切换任务？</h3><h3 id="五、什么事情会触发上下文切换？"><a href="#五、什么事情会触发上下文切换？" class="headerlink" title="五、什么事情会触发上下文切换？"></a>五、什么事情会触发上下文切换？</h3>
+    <h2 id="嵌入式实时操作系统原理RTOS"><a href="#嵌入式实时操作系统原理RTOS" class="headerlink" title="嵌入式实时操作系统原理RTOS"></a><strong>嵌入式实时操作系统原理RTOS</strong></h2>
+    
     
 
     
@@ -472,7 +336,7 @@ A task is an infinite loop function. it looks just like any other C function con
     
     <p>&lt;img src=”test/test.JPG”,alt=”first”, width=600 height=300&gt;</p>
 <p>i<a href="test/test.JPG">first</a></p>
-<img src="/2020/06/16/test/test.JPG" class="" title="This is an example image">
+
 
     
 
@@ -555,75 +419,6 @@ A task is an infinite loop function. it looks just like any other C function con
     
     <p class="article-more-link">
       <a class="article-more-a" href="/2020/06/16/InsertCartoon/">展开全文 >></a>
-    </p>
-    
-
-    
-    <div class="clearfix"></div>
-  </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-
-
-
-
-  
-    <article id="post-Markdown" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class=" article-header">
-  <!-- 
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/06/16/Markdown/">Markdown</a>
-    </h1>
-  
- -->
-  <!--显示阅读次数-->
-  
-  
-  <a href="/2020/06/16/Markdown/" class="archive-article-date">
-  	<time datetime="2020-06-16T06:57:01.514Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-06-16</time>
-</a>
-  
-  </header>
-  
-  <div class="article-entry" itemprop="articleBody">
-    
-    <h1 id="Markdown-语法技巧-amp-总结"><a href="#Markdown-语法技巧-amp-总结" class="headerlink" title="Markdown 语法技巧&amp;总结"></a>Markdown 语法技巧&amp;总结</h1><h3 id="将在写博客时遇到的问题和技巧记录下来，方便查询（持续更新）"><a href="#将在写博客时遇到的问题和技巧记录下来，方便查询（持续更新）" class="headerlink" title="将在写博客时遇到的问题和技巧记录下来，方便查询（持续更新）"></a>将在写博客时遇到的问题和技巧记录下来，方便查询（持续更新）</h3>
-    
-    
-
-    
-  </div>
-  <div class="article-info article-info-index">
-    
-    
-    
-
-    
-    <p class="article-more-link">
-      <a class="article-more-a" href="/2020/06/16/Markdown/">展开全文 >></a>
     </p>
     
 

@@ -8,12 +8,12 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>嵌入式实时操作系统原理 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="任务管理 内核是做什么的？             调度  内核调度什么？                任务  什么是任务？一个可以执行的软件，有代码 数据 计算资源。从代码的角度来说，task是一个无限循环的void函数，他会在内存当中不断地被调度，比如QQ一直在后台运行，直到你强制退出。 task是一个逻辑上的存在，并且是动态存在的，根据冯诺依曼体系，我们可以看出代码是存储执行的，即静态的，">
+  <meta name="description" content="嵌入式实时操作系统原理RTOS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="嵌入式实时操作系统原理">
 <meta property="og:url" content="http://yoursite.com/2020/08/09/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AE%9E%E6%97%B6%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="任务管理 内核是做什么的？             调度  内核调度什么？                任务  什么是任务？一个可以执行的软件，有代码 数据 计算资源。从代码的角度来说，task是一个无限循环的void函数，他会在内存当中不断地被调度，比如QQ一直在后台运行，直到你强制退出。 task是一个逻辑上的存在，并且是动态存在的，根据冯诺依曼体系，我们可以看出代码是存储执行的，即静态的，">
+<meta property="og:description" content="嵌入式实时操作系统原理RTOS">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://i.loli.net/2020/08/09/dgaPfXhK7cWkuB9.png">
 <meta property="og:image" content="https://i.loli.net/2020/08/09/MOuXsEn7DlWtwyU.png">
@@ -21,8 +21,22 @@
 <meta property="og:image" content="https://i.loli.net/2020/08/09/DY5VGLeAFnIsfiP.png">
 <meta property="og:image" content="https://i.loli.net/2020/08/09/XgPoEFJ4LsqOcvh.png">
 <meta property="og:image" content="https://i.loli.net/2020/08/09/XpAW4VZYB37mwQk.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/09/n9JzdCvDUc54KsX.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/igh9ovQRpr1xkd4.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/RhPZIVnx4lTwocH.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/Zc9mFUtaT3hB7k6.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/meTtuYFfhO1xILn.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/JpYN571mfXxr94P.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/QYsKmzIFfUqtXd5.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/VYkt7ew96Ig1dul.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/rO5W9BxypVDEnwh.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/gwXUfrnodi3QamR.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/j9QUlzV2GvKIe4P.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/M8CYQpfZz9SD7T1.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/FJzZy3SawhoL2cp.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/10/7toYqEZ2uBxkcVm.png">
 <meta property="article:published_time" content="2020-08-09T09:51:28.813Z">
-<meta property="article:modified_time" content="2020-08-09T09:51:41.256Z">
+<meta property="article:modified_time" content="2020-08-10T13:04:38.877Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://i.loli.net/2020/08/09/dgaPfXhK7cWkuB9.png">
@@ -202,25 +216,25 @@
   
   <div class="article-entry" itemprop="articleBody">
     
-    <h2 id="任务管理"><a href="#任务管理" class="headerlink" title="任务管理"></a><strong>任务管理</strong></h2><ul>
+    <h2 id="嵌入式实时操作系统原理RTOS"><a href="#嵌入式实时操作系统原理RTOS" class="headerlink" title="嵌入式实时操作系统原理RTOS"></a><strong>嵌入式实时操作系统原理RTOS</strong></h2><a id="more"></a> 
+
+<p>[toc]</p>
+<ul>
 <li><p>内核是做什么的？             调度</p>
 </li>
 <li><p>内核调度什么？                任务</p>
 </li>
 <li><p>什么是任务？一个可以执行的软件，有代码 数据 计算资源。从代码的角度来说，task是一个无限循环的void函数，他会在内存当中不断地被调度，比如QQ一直在后台运行，直到你强制退出。 task是一个逻辑上的存在，并且是动态存在的，根据冯诺依曼体系，我们可以看出代码是存储执行的，即静态的，这也是task和code的主要区别。</p>
-<pre><code>A task is an executable software entity specialized to perform a special action which includes sequential code and relative data and computer resource 
-A task is an infinite loop function. it looks just like any other C function containing a return type and an argument but it must return. The return type of a task must always be declared to be void</code></pre></li>
+<p>​    A task is an executable software entity specialized to perform a special action which includes sequential code and relative data and computer resource </p>
+<p>​    A task is an infinite loop function. it looks just like any other C function containing a return type and an argument but it must return. The return type of a task must always be declared to be void</p>
+</li>
 <li><p>任务的特点是什么？ 同步，异步，动态性</p>
 </li>
 </ul>
-<h3 id="一、如何描述一个任务？"><a href="#一、如何描述一个任务？" class="headerlink" title="一、如何描述一个任务？"></a>一、如何描述一个任务？</h3><ol>
-<li><p>从设计上看，任务就是应用程序中小任务对应的程序实体；从代码上看，就是一个函数；从存储结构上看，由<strong>任务程序代码、任务堆栈和任务控制块</strong> 组成。系统通过任务控制块来感知和控制任务；任务堆栈主要用来保护断点和恢复断点；任务代码是一个超循环结构，它描述了任务的执行过程。</p>
-</li>
-<li><p>代码描述：在RTOS中，任务是一个具有独立功能，无限循环的程序段的一次运行活动，是实时内核调度的基本单位</p>
+<h3 id="一、如何描述一个任务？"><a href="#一、如何描述一个任务？" class="headerlink" title="一、如何描述一个任务？"></a>一、如何描述一个任务？</h3><h4 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h4><p>​    从设计上看，任务就是应用程序中小任务对应的程序实体；从代码上看，就是一个函数；从存储结构上看，由<strong>任务程序代码、任务堆栈和任务控制块</strong> 组成。系统通过任务控制块来感知和控制任务；任务堆栈主要用来保护断点和恢复断点；任务代码是一个超循环结构，它描述了任务的执行过程。</p>
+<h4 id="2-代码描述"><a href="#2-代码描述" class="headerlink" title="2.代码描述"></a>2.代码描述</h4><p>​    在RTOS中，任务是一个具有独立功能，无限循环的程序段的一次运行活动，是实时内核调度的基本单位</p>
 <p>​    <img src="https://i.loli.net/2020/08/09/dgaPfXhK7cWkuB9.png" alt="image.png"></p>
-</li>
-<li><p>任务和进程之间的区别？</p>
-<p>​    在uc/OS II 中，一个任务也称作一个线程，也就是说线程和进程有什么区别。因为Linux是多进程操作系统，因此和多人认为嵌入式操作系统也是多进程的，其实不然，真正的RTOS基本上没有实现进程，只是实现了多线程，因为多进程需要解决很多问题，还需要硬件支持，这样会使系统变得复杂，有可能影响系统的实时性。</p>
+<h4 id="3-任务和进程之间的区别？"><a href="#3-任务和进程之间的区别？" class="headerlink" title="3. 任务和进程之间的区别？"></a>3. 任务和进程之间的区别？</h4><p>​    在uc/OS II 中，一个任务也称作一个线程，也就是说线程和进程有什么区别。因为Linux是多进程操作系统，因此和多人认为嵌入式操作系统也是多进程的，其实不然，真正的RTOS基本上没有实现进程，只是实现了多线程，因为多进程需要解决很多问题，还需要硬件支持，这样会使系统变得复杂，有可能影响系统的实时性。</p>
 <p>​    那么线程和进程之间究竟有什么区别呢？简单來说，线程之间是共享地址的。也就是说，当前线程的地址对于其他线程是可见的，如果修改了当前线程的地址，其他线程是可以知道并且能够访问的。</p>
 <p>​            <img src="https://i.loli.net/2020/08/09/MOuXsEn7DlWtwyU.png" alt="image.png"></p>
 <center>图1：创建任务执行test函数</center>
@@ -232,9 +246,7 @@ A task is an infinite loop function. it looks just like any other C function con
 <p>​    (1) 地址保护。每个进程有独立的地址空间，如果当前进程跨界访问了其他进程的地址空 间，则程序会岀错。这种地址保护机制需要有存储器保护单元(Memory Protection Unit, MPU) 硬件的支持。</p>
 <p>​    (2) 虚拟地址。各个进程虽然都访问同一地址，但是由于虚拟地址机制的存在，它们对应 的物理地址是不相同的，所以读取的值也不相同。这种虚拟地址机制需要有内存管理单元 (Memory Management Unit, MMU)硬件的支持。</p>
 <p>其实这也间接说明了多进程的好处，那就是进程之间相互独立、隔离， •个进程的崩溃或 错误操作不会影响其他进程。当然这也会带来缺点，那就是无法直接访问全局变量，因为全局 变量都位于进程范围内，无法在进程之间共享，进程间的通信就变得困难。正因为如此， RTOS很少支持多进程，一是RTOS从单片机发展而来，硬件不支持;二是进程间通信互斥的 开销太大，导致系统复杂，对注重实时性的应用来说代价太大。</p>
-</li>
-<li><p>任务控制块——TCB</p>
-<p>一个任务的TCB共有10个成员，且共占用大小为20Bytes，具体如下：</p>
+<h4 id="4-任务控制块—TCB-amp-优先级位图法"><a href="#4-任务控制块—TCB-amp-优先级位图法" class="headerlink" title="4. 任务控制块—TCB &amp; 优先级位图法"></a>4. 任务控制块—TCB &amp; 优先级位图法</h4><p>一个任务的TCB共有10个成员，且共占用大小为20Bytes，具体如下：</p>
 <table>
 <thead>
 <tr>
@@ -324,10 +336,14 @@ A task is an infinite loop function. it looks just like any other C function con
 <p>μC/OS-||任务的五种状态：睡眠状态、就绪状态、运行状态、等待状态、中断服务状态</p>
 <p><img src="https://i.loli.net/2020/08/09/DY5VGLeAFnIsfiP.png" alt="image.png"></p>
 </li>
-<li><p>OSTCBX OSTCBY OSTCBBitX OSTCBBitY，优先级位图法</p>
-<p>​    为解决调度时间的不确定性，使用优先级位图法。</p>
+<li><p>OSTCBX OSTCBY OSTCBBitX OSTCBBitY，<strong>优先级位图法</strong></p>
+<p>​    （1）OSTCBX和OSTCBY分别对应着prio的高三位和低三位，也就分别对应着这个类似二维数组的两个索引。我们可以通过X和Y进行访问当前节点；</p>
+<p>​    （2）OSTCBBitX OSTCBBitY的内容出现的目的是为了快速访问，也就是变成掩码的形式；</p>
+<p>​    （3）为解决调度时间的不确定性，使用优先级位图法。</p>
 <p>​    uC/OS [[支持64个优先级，分别对应优先级0〜63,具中0为最高优先级，63为最低优先级，每个优先级只对应一个任务。系统保留了 4个最高优先级任务和4个最低优先级任务， 用户可以使用的任务数为56个。首先，uC/OS II构造了一个逻辑上的优先级表，该表是一个方阵，一共有8 行，每行8个元素，分別代表八个优先级，优先级从右到左依次升高，优先级表如图所示</p>
 <p><img src="https://i.loli.net/2020/08/09/XgPoEFJ4LsqOcvh.png" alt="image.png"></p>
+<center> 图5</center>
+
 <p>​    为了存储该优先级表，uC/OS II定义了以下两个变量:</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">OS_EXT INT8U PriorityReadyGroup</span><br><span class="line">OS EXT INT8U PriorityReadyTable[<span class="number">8</span>]</span><br></pre></td></tr></table></figure>
 
@@ -335,11 +351,255 @@ A task is an infinite loop function. it looks just like any other C function con
 <p>​    <strong>PriorityReadyTable[8]是一个8位二进制数组</strong>，数组的下标值均PriorityReadyGroup的位数对应。例如PriorityReadyTable[0]对应 PriorityReadyGroup 的第 0 位，即第1行，或优先级(0〜7) ; PriorityReadyTable[2]对应 PriorityReadyGroup 的第2位，即第2行，或优先级(16〜 23)。另外，PriorityReadyTable[v]的每个元素也是一个8位二进制变量，每一位对应该元素下标所对应行中某一列的优先级，其值要么为“1”，要么为“0”。如果某一位 为“1”，则意味着该元素下标所对应行的相应列的优先级有就绪任务;如果某一位为“0”， 则意味着该元素下标所对应行的相应列的优先级没有就绪任务。<strong>例如， PriorityReadyTable[0]=00000001,表示(第0行、第0列)对应的优先级(0号优先级)有就绪任务;PriorityReadyTable[3]=00001010,表示(第3行、第1列)和(第3行、第3列)对应 的优先级(分别为25、27号优先级)有就绪任务。</strong></p>
 <p>​    用PriorityReadyGroup和PriorityReadyTable[y]存储上图所示的优先级表，任务的优先级便可通过这两个变量来确定。uC/OS II也通过一个8位二进制变量来描述任务的优先级，其中，第 7 位和第6 位均为“0” ，高 3 位为某一优先级在 PriorityReadyGroup中指示的优先级表的行数，低 3 位为某优先级在PriorityReadyTable[y]中 指示的优先级表的列数，如下图所示。由这高3位和低3位构成的8位二进制数便可表示某一任务的优先级。例如,对于优先级35, PriorityReadyGroup的第4位(第4行 ,二进制表示 为100)为“1”，100将占用高3位，PriorityReadyTable[4]的第3位(第3列,二进制表示为 011)为“1” , 011将占用低3位，这样，00100011就构成了任务的优先级，即35号优先级。</p>
 <p><img src="https://i.loli.net/2020/08/09/XpAW4VZYB37mwQk.png" alt="image.png"></p>
+<center>图6</center>
+
+
+
 </li>
 </ul>
+<p>  (1)新任务进入就绪状态</p>
+<p>  ​        当系统中有新任务到达并进入就绪状态时，uC/OS II将对PriorityReadyGroup和 PriorityReadyTable[]进行什么操作呢?在回答该问题前,先介绍uC/OS II的优先级映射表 (PriorityMapTable[8])。优先级映射表本质上是一个掩码表，是一个8位二进制数组，数组 的下标与图6所示的任务优先级的高3位或者低3位对应，表示PriorityReadyGroup的行数 或者PriorityReadyTable[y]的列数，数组的值如图7所示,”1”表示PriorityReadyGroup或者PriorityReadyTable[y]的对应位也为“1 ”。仍然以优先级35(二进制数表示为00100011)为例， 00100011的高3位为100,低3位为011, 100对应PriorityReadyGroup表示的行数4,根据表7，PriorityMapTable[4]=00010000;011对应PriorityReadyTable[y]表示的列数3,根据图7, PriorityMapTable[3]= 00001000.</p>
+<p>  <img src="https://i.loli.net/2020/08/09/n9JzdCvDUc54KsX.png" alt="image.png"></p>
+  <center> 图7 PriorityMapTable[](OSTCBBitX,OSTCBBitY)</center>
+
+<p>  ​        如果有新任务进入就绪状态，需要对PriorityReadyGroup和 PriorityReadyTable[y]进行相应的操作，把就绪任务的优先级映射到这两个变量。例如，优先级为35(00100011)的任务进入就绪状态，因为35位于优先级表图5的第4行、第3列，因此需要将PriorityReadyGroup 的第4位变为”1” (如果第4位已经是”1”，则PriorityReadyGroup保持不变)，再将 PriorityReadyTable[4]的第 3 位变为 “ 1” (如果第 3 位已经是 “ 1” , 则 PriorityReadyTable[4] 保持不变)。为实现上述操作:</p>
+<ul>
+<li><p>需要先将优先级35(00100011)右移3位，得到高3位100（十进制为4），根据优先级映射表PriorityMapTable[4] = 00010000,将该值与PriorityReadyGroup做二进制与运算，即可使PriorityReadyGroup的第4位变为1</p>
+</li>
+<li><p>再将优先级35（00100011）与0x07（00000111）做二进制与运算，得到低三位011（二进制为3），根据优先级映射表PriorityMapTable[3] = 00001000，再将该值与PriorityReadyTable[4]做二进制或运算，即可使PriorityReadyTable[4]的第3位变为 “ 1”，正好对应优先级35</p>
+<p>具体操作用C语言描述为</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PriorityReadyGroup|= PriorityMapTable[Priority&gt;&gt;<span class="number">3</span>];    <span class="comment">//二进制或运算，只要一个为1，结果就为1</span></span><br><span class="line">PriorityReadyTable[Priority&gt;&gt;<span class="number">3</span>] |= PriorityMapTable[Priority&amp;Ox07];</span><br></pre></td></tr></table></figure>
+
+<p>（2）旧任务退出就绪状态</p>
+<p>​    当系统中有旧任务退出就绪状态时，也需要对PriorityReadyGroup和 PriorityReadyTable[y] 进行相关操作。例如，优先级为35(00100011)的任务退出就绪状态，因为35位于优先级表（图5）的第4行、第3列，因此需要将PriorityReadyTable[4]的第3位由以前的“ 1 ”变为“0” ; 再判断PriorityReadyTable(4)的每一位是否都为“0” , 如果都为“0” ，则意味着优先级表第4 行的所有优先级都没有就绪任务，要将PriorityReadyGroup的第4位变为“0” ;如果 PriorityReadyTable[4]不是每一位都为“0”，则意味着优先级表第4行的优先级还有就绪任务， PriorityReadyGroup保持不变。为实现上述操作：</p>
+<ul>
+<li>首先将要退出任务的优先级35(00100011)右移 3位，得到高3位100 (十进制数为4),再获取优先级的低3位011 (十进制数为3),继而从优先级映射表中获取二进制掩码，并按位取反后与PriorityReadyTable[4]对应优先级进行按位与运算，把PriorityReadyTable[4]第3位设为“0” ，如果按位与运算的结果为0，说明优先级表整个第四行退出35之后都没有就绪任务，则将PriorityReadyGroup的第四位变成0。</li>
+</ul>
+<p>具体操作用C语言描述为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">If((PriorityReadyTable[Priority&gt;&gt;<span class="number">3</span>]&amp;~ PriorityMapTable[Priority&amp;<span class="number">0x07</span>])==<span class="number">0</span>) </span><br><span class="line">PriorityReadyGroup&amp;= ~PriorityMapTable[Priority&gt;&gt;<span class="number">3</span>];  <span class="comment">//~表示按位取反</span></span><br></pre></td></tr></table></figure>
+
+<p>（3）查找就绪队列中的最高优先级</p>
+<p>​    调度的关键步骤就是从就绪队列中找到优先级最高的任务并使其运行。如果某个任务的优先级(Priority(T))是就绪任务中的最高优先级，则根据优先级表(图5) , Priority(T)所在行上方和Priority(T) 所在列右侧的优先级均没有就绪任务，这意味着Priority(T)对应的 PriorityReadyGroup 所在位的右侧全是”0” , 并且 Priority(T)对应的 PriorityReadyTable[y]所在位的右侧也全是“0”。例如，优先级10为最高优先级，则PriorityReadyGroup=xxxxxx10 (x表 示“0”或“1 ”中任意一个值，具体值根据就绪任务的情况而定),PriorityReadyTable[1]=xxxxx100。又如,PriorityReadyGroup=00010010,表示优先级表中从第1行起有某一优先级的就绪任务; PriorityReadyTable[1]=00010100,表示优先级表中从第I行、第2列起有优先级的就绪任务, 由PriorityReadyGroup和PriorityReadyTable[1]确定的最高优先级就是10号优先级。</p>
+<p>​    若要通过PriorityReadyGroup和 PriorityReadyTable[y]找到最高优先级，只需先确定 PriorityReadyGroup中哪一位首先出现“1 ” ,再确定对应行的PriorityReadyTable[p]中哪一位首 先出现“I”，便可确定就绪队列中哪个任务是最高优先级任务。而确定哪一位首先出现“1” 是和“1”所在的位置相关的。如何做到该步骤的时间无关性呢?uC/OS II定义了优先级判定表PriorityDecisionTable[256], 如图8 所示:</p>
+<p><img src="https://i.loli.net/2020/08/10/igh9ovQRpr1xkd4.png" alt="image.png"></p>
+<center> 图8</center>
+
+<p>​    由于PriorityReadyGroup和每个PriorityReadyTable[y]]数组元素的值都是8位的二进制数， 每个8位的二进制数可以表示的十进制数为256个(00000000-11111111,即0x00〜0xFF) , 256 即为优先级判定表PriorityDecisionTable[]的下标总数，每个下标对应的值就是该下标对应的二进制数中首先出现“1 ”的位数。例如，若PriorityReadyGroup=00010010 (十六进制数为0x12),由图8 可知，PriorityDecisionTable[0xl2]=1,因此只要知道 PriorityReadyGroup 和 PriorityReadyTable[y]的值，就能通过优先级判定表立刻知道这两个变量中哪一位首先出现“1 ”， 并且该步骤与所在的位置无关。只要得到了PriorityReadyGroup和PriorityReadyTable[y]] 中首先出现“ 1” 的位置，便可通过图5确定具体的优先级。</p>
+<p>​    实例10 假设当前就绪队列的PriorityReadyGroup=01010000 (十六进制数为0x50,即从第4行起的优先级有任务就绪)，PriorityReadyTable[4]=10001000 (十六进制数为0x88),查找最高优先级的步骤如下:</p>
+<ul>
+<li><p>根据优先级判定表，PriorityDecisionTable[0x50]=4, 即 PriorityReadyGroup 从第 4 位(二进制数为 100)开始岀现1</p>
+</li>
+<li><p>PriorityDecisionTafele[0x88]=3, 即PriorityReadyTable[4]从第3位(二进制数为011)开始出现“1” </p>
+</li>
+<li><p>根据图6, 100构成优先级的高三位，011构成优先级的低三位，即优先级为00100011，对应的十进制优先级是35</p>
+</li>
+</ul>
+<p>对应的C语言描述为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">high3Bit=priorityDecisionTable[priorityReadyGroup]; low3Bit=priorityDecisionTable[priorityReadyTable[high3Bit]]; </span><br><span class="line">Priority=(high3Bit&lt;&lt;<span class="number">3</span>)+low3Bit;</span><br></pre></td></tr></table></figure>
+
+<p>由于优先级位图法在确定PriorityReadyGroup和 PriorityReadyTabIe[y]中哪-位首先出现 “ 1 ”时做到了和“1 ”出现的位置无关，进而做到了从就绪队列屮杳找最高优先级任务的时间与队列长度无关，从而提高了任务响应时间和调度时间的确定件</p>
+</li>
+</ul>
+<h3 id="二、如何在-us-OS-II-中创建一个任务？"><a href="#二、如何在-us-OS-II-中创建一个任务？" class="headerlink" title="二、如何在 us/OS II 中创建一个任务？"></a>二、如何在 us/OS II 中创建一个任务？</h3><h4 id="1-任务创建代码"><a href="#1-任务创建代码" class="headerlink" title="1.任务创建代码"></a>1.任务创建代码</h4><p>从前面我们知道，一个任务由任务代码，任务堆栈，任务控制块三部分构成。以下是任务创建代码：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">INT8U <span class="title">OSTaskCreate</span> <span class="params">(<span class="keyword">void</span> (*task) (<span class="keyword">void</span> *p_d) , <span class="keyword">void</span> p*_arg, OS_STK *ptos, INT8U prio)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	OS_STK *psp;</span><br><span class="line">  INT8U err;</span><br><span class="line">  </span><br><span class="line"> <span class="comment">/*为 CPU 状态寄存器分配空间,等于3表示选择第三种保护临界代码段的方法，共有三种*/</span> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> OS_CRITICAL_METHOD == 3 </span></span><br><span class="line">  OS_CPU_SR cpu_sr = <span class="number">0</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">  </span><br><span class="line"> <span class="comment">/*确定优先级分配的有效性*/</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> OS_ARG_CHK_EN &gt; 0</span></span><br><span class="line">  <span class="keyword">if</span> (prio &gt; OS_LOWEST_PRIO) &#123;					</span><br><span class="line">			<span class="keyword">return</span> (OS_PRIO_INVALID);</span><br><span class="line">&#125; <span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    </span><br><span class="line">  <span class="comment">//关中断，进入临界区</span></span><br><span class="line">	OS_ENTER_CRITICAL(); </span><br><span class="line">	<span class="keyword">if</span> (OSIntNesting &gt; <span class="number">0</span>) </span><br><span class="line">&#123; </span><br><span class="line">		OS_EXIT_CRITICAL();</span><br><span class="line">		<span class="keyword">return</span> (OS_ERR_TASK_CREATE_ISR);</span><br><span class="line">&#125;</span><br><span class="line">  <span class="comment">/*判断没有任务占用该优先级，若无任务占用，则赋值为1，防止其他任务创建时暂用*/</span></span><br><span class="line">  <span class="keyword">if</span> (OSTCBPrioTbl[prio] == (OS_TCB*)<span class="number">0</span>) </span><br><span class="line">&#123;</span><br><span class="line">    OSTCBPrioTbl[prio] = (OS_TCB*)<span class="number">1</span>;</span><br><span class="line">  	<span class="comment">//退出临界区</span></span><br><span class="line">  	OS_EXIT_CRITICAL();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//1.初始化任务堆栈</span></span><br><span class="line">    psp = OSTaskStklnit (task, p_arg, ptos, <span class="number">0</span>) ;</span><br><span class="line">    <span class="comment">//2.初始化TCB</span></span><br><span class="line">    err = OS_TCBInit(prio, psp, (OS_STK*)<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, (<span class="keyword">void</span> *)<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//如果初始化成功</span></span><br><span class="line">    <span class="keyword">if</span> (err == OS_NO_ERR) </span><br><span class="line">	&#123;</span><br><span class="line">      <span class="comment">/*如果操作系统正在建行，则从就绪队列中找到最高优先级任务执行*/</span></span><br><span class="line">			<span class="keyword">if</span> (OSRunning == OS_TRUE) </span><br><span class="line">				OS_Sched();</span><br><span class="line">	&#125; <span class="keyword">else</span> </span><br><span class="line">	&#123;</span><br><span class="line">      OS_ENTER_CRITICAL();</span><br><span class="line">      OSTCBPrioTbl[prio] = (OS_TCB*)<span class="number">0</span>;</span><br><span class="line">      OS_EXIT_CRITICAL();</span><br><span class="line">	&#125;</span><br><span class="line">     <span class="keyword">return</span> (err);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//如果有任务占用了，则退出临界区，返回错误</span></span><br><span class="line"><span class="function">OS EXIT <span class="title">CRITICAL</span><span class="params">()</span></span>;</span><br><span class="line"><span class="keyword">return</span> (OS_PRIO_EXIST);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面我们重点介绍任务堆栈的初始化和TCB的初始化</p>
+<h4 id="2-任务堆栈的初始化，通过OSTaskStkInit-实现"><a href="#2-任务堆栈的初始化，通过OSTaskStkInit-实现" class="headerlink" title="2. 任务堆栈的初始化，通过OSTaskStkInit()实现"></a>2. 任务堆栈的初始化，通过OSTaskStkInit()实现</h4><ul>
+<li><p>为什么需要堆栈初始化?</p>
+<p>​    在堆栈初始化过程中，需要保存任务的起始地址、处理器状态字(在ARM中叫作程序当前状态)、中断返回地址和寄存器等信息。OSTaskStklnit()是一个与硬件相关的函数，因为不同的处理器有不同的寄存器(寄存器个数、寄存器功能分配等都不同)，这些寄存器体现了当前任务的运行环境，如果当前任务被其他任务中断或抢占，将发生任务上下文的切换，<strong>此吋，需要通过堆栈来保存被抢占任务的运行环境，那么应先保存哪个寄存器呢?这就需要根据处理器的结构而定。堆栈初始化就是用来规定寄存器保存的顺序的。</strong>这里我们以ARM9 S3C2440为例说明堆栈是如何初始化的。</p>
+</li>
+<li><p>OSTaskStkInit()</p>
+<p>​    其中，R0〜R7是通用寄存器，R8〜 R12是影子寄存器（其实R0到R12都可以理解为通用寄存器）,R13是堆栈寄存器(SP,指向堆栈的首地址),R14是链接寄存器(LR),R15是程序指针(PC),每个寄存器都是32 bit(4 B)的。当低优先级任务被高优先级任务抢占而发生上下文切换时，需要保持上述16个寄存器的值(R13除外，R13的值将保存在当前任务的TCB-OSTCBStkPtr中)， 因此在堆栈初始化时就要压入这些寄存器来模拟(因为任务刚创建时尚未开始运行，其运行环境只能模拟)任务环境入栈。</p>
+<p>​    传入的task为对应的PC指针，指示代码的位置</p>
+<p>​    LR用于还原,当调用的函数执行完之后，回到LR中存储的返回地址所指向的地方</p>
+<p>​    CPSR和PSW相同，表示状态，对所有的内容进行保存</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">OS_STK *<span class="title">OSTaskStkInit</span> <span class="params">(<span class="keyword">void</span> (*task)(<span class="keyword">void</span> *pd), <span class="keyword">void</span> *p_arg, OS_STK *ptos, INT16U opt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    OS_STK *stk;                                                         </span><br><span class="line">    opt    = opt; </span><br><span class="line">    stk    = ptos;      					<span class="comment">//ptos是传入的参数，是堆栈初始地址，这里的堆栈是向下生长的</span></span><br><span class="line">    *(stk)  = (OS_STK)task;       <span class="comment">/*在栈顶存放任务执行函数地址，最开始为函数入口地址，后面为执行该函数PC的值*/</span>                               </span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*LR */</span>                                     </span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R12*/</span>                                     </span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R11*/</span></span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R10*/</span></span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R9*/</span></span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R8*/</span></span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R7*/</span></span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R6*/</span></span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R5*/</span></span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R4*/</span>    </span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R3*/</span></span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R2*/</span></span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>;         	<span class="comment">/*R1*/</span></span><br><span class="line">    *(--stk) = (INT32U)p_arg;	         <span class="comment">/*R0存放传出的参量，即return*/</span>	</span><br><span class="line">    *(--stk) = (INT32U)<span class="number">0</span>x <span class="number">0x00000013</span>L;  <span class="comment">//压入处理器状态寄存器CPSR                             </span></span><br><span class="line">     <span class="keyword">return</span> (stk); 									<span class="comment">//返回最新的堆栈地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    从代码中我们可以看到，当前任务运行环境(16个寄存器)保存的顺序是PC-LR-R12…R0-CPSR。这16个寄存器保存在堆栈stk中，最后返回最新的stk 指针，如图9所示。而stk是用户所创建的堆栈指针变量地址，这样就模拟了当任务切换时，当前任务的运行环境是如何保存到堆栈中的。如果在系统运行过程中发生了实际任务切换，需要根据该方式将16个寄存器的值依次保存在stk中。详细内容我们后面会讲到“任务切换”</p>
+<p><img src="https://i.loli.net/2020/08/10/RhPZIVnx4lTwocH.png" alt="image.png"></p>
+<center>图9（也就是任务切换时各寄存器的保存顺序，从上往下）
+</center>
+
+<h4 id="3-TCB的初始化"><a href="#3-TCB的初始化" class="headerlink" title="3. TCB的初始化"></a>3. TCB的初始化</h4><p>通过OS_TCBlnit()初始化TCB,该函数的原型为:INT8U OS_TCBInit (INT8U prio, OS_STK *ptos, OS_STK *pbos, INT16U id, INT32U stk size, void *pext, INT16U opt)。函数中各参数的作用如下:</p>
+<p> prio:进程的优先级</p>
+<p> ptos:堆栈指针，指向栈顶</p>
+<p> pbos:堆栈栈底指针</p>
+<p> id:任务标识符</p>
+<p> stk_size:堆栈的容量。</p>
+<p> opt: OS_TCB的选择项</p>
+<p>具体代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">INT8U  <span class="title">OS_TCBInit</span> <span class="params">(INT8U prio, OS_STK *ptos, OS_STK *pbos, INT16U id, INT32U stk_size, <span class="keyword">void</span> *pext, INT16U opt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> OS_CRITICAL_METHOD == 3                               </span></span><br><span class="line">    OS_CPU_SR  cpu_sr;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span>    </span></span><br><span class="line">    OS_TCB    *ptcb;     <span class="comment">//申请指针</span></span><br><span class="line">    OS_ENTER_CRITICAL();</span><br><span class="line">    ptcb = OSTCBFreeList;    <span class="comment">//从空闲TCB List中获取一个成员</span></span><br><span class="line">    </span><br><span class="line">  </span><br><span class="line">    <span class="comment">//对新成员赋值</span></span><br><span class="line">    <span class="keyword">if</span> (ptcb != (OS_TCB *)<span class="number">0</span>) &#123;</span><br><span class="line">        OSTCBFreeList  = ptcb-&gt;OSTCBNext;          </span><br><span class="line">        OS_EXIT_CRITICAL();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//对TCB的成员赋值</span></span><br><span class="line">        ptcb-&gt;OSTCBStkPtr= ptos;                      </span><br><span class="line">        ptcb-&gt;OSTCBPrio = (INT8U)prio;                </span><br><span class="line">        ptcb-&gt;OSTCBStat = OS_STAT_RDY;               </span><br><span class="line">        ptcb-&gt;OSTCBDly = <span class="number">0</span>;   </span><br><span class="line">      </span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> OS_TASK_CREATE_EXT_EN &gt; 0</span></span><br><span class="line">        ptcb-&gt;OSTCBExtptr = pext;                      </span><br><span class="line">        ptcb-&gt;OSTCBStk_size = stk_size;</span><br><span class="line">        ptcb-&gt;OSTCBStkBottom = pbos;</span><br><span class="line">        ptcb-&gt;OSTCBOpt = opt;</span><br><span class="line">        ptcb-&gt;OSTCBId = id;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span>   </span></span><br><span class="line">				pext= pext;</span><br><span class="line">				stk <span class="built_in">size</span>= stk_size; pbos= pbos;</span><br><span class="line">				opt= opt;</span><br><span class="line">				id= id;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">        <span class="comment">//OSTCBX,OSTCBY,OSTCBBitX,OSTCBBitY赋值</span></span><br><span class="line">        ptcb-&gt;OSTCBY = prio &gt;&gt; <span class="number">3</span>;         <span class="comment">//高三位OSTCBY                   </span></span><br><span class="line">        ptcb-&gt;OSTCBBitY=OSMapTbl[ptcb-&gt;OSTCBY]Y   </span><br><span class="line">        ptcb-&gt;OSTCBX =prio &amp; <span class="number">0x07</span>;			  <span class="comment">//低三位OSTCBX</span></span><br><span class="line">        ptcb-&gt;OSTCBBitX=OSMapTbl[ptcb-&gt;OSTCBX];     </span><br><span class="line">        OS_ENTER_CRITICAL();</span><br><span class="line">      </span><br><span class="line">        <span class="comment">//将该TCB加入优先级表</span></span><br><span class="line">        OSTCBPrioTbl[prio] = ptcb;</span><br><span class="line">      	<span class="comment">//将该TCB加入TCBList的第一个节点处</span></span><br><span class="line">        ptcb-&gt;OSTCBNext = OSTCBList;                  </span><br><span class="line">        ptcb-&gt;OSTCBPrev = (OS_TCB *)<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> (OSTCBList != (OS_TCB *)<span class="number">0</span>) &#123;</span><br><span class="line">            OSTCBList-&gt;OSTCBPrev = ptcb;</span><br><span class="line">        &#125;</span><br><span class="line">        OSTCBList = ptcb;</span><br><span class="line">        <span class="comment">//使任务进入就绪状态</span></span><br><span class="line">        OSRdyGrp |= ptcb-&gt;OSTCBBitY;        </span><br><span class="line">        OSRdyTbl[ptcb-&gt;OSTCBY] |= ptcb-&gt;OSTCBBitX;</span><br><span class="line">        OS_EXIT_CRITICAL();</span><br><span class="line">        <span class="keyword">return</span> (OS_NO_ERR);</span><br><span class="line">    &#125;</span><br><span class="line">    OS_EXIT_CRITICAL();</span><br><span class="line">    <span class="keyword">return</span> (OS_NO_MORE_TCB);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    上述代码实现了首先申请一个指向OS_TCB的指针TCB *ptcb,并将该指针指向从空闲的TCB链表中找到的一个OS_TCB块，然后对OS_TCB中的各成员赋值，完成TCB的初始化，并将初始化之后的TCB加入到链表OSTCBList。uC/OS II 在调用 OSInit()进行系统初始化时,根据用户配置信息, 通过lnilTCBList()申请OS_MAX_TASKS+OS_N_SYS_ TASKS个空闲任务控制块，并把它们通过链表的形式链接起来，链表的头指针为 OSTCBFreeList。如下图所示：</p>
+<p><img src="https://i.loli.net/2020/08/10/Zc9mFUtaT3hB7k6.png" alt="image.png"></p>
+<center>图10</center>
+
+<h3 id="三、任务调度算法"><a href="#三、任务调度算法" class="headerlink" title="三、任务调度算法"></a>三、任务调度算法</h3><p>​    调度算法从是否可抢占来看分为<strong>可抢占式(preemptive)调度</strong>和<strong>非抢占式(non-preemptive)调度</strong>. 在非抢占调度中, 一个作业一旦开始运行就不会被其它作业打断,即使其它作业的优先级比较高.这样就意味着一个作业的在生存期内不会有”被抢占”这个状态. 非抢占式调度在实现方面较为简单, 而且不会发生<strong>死锁(deadlock)现象</strong>. 但是在性能方面会比可抢占式调度要差. 因为高优先级的作业往往不能得到最快的处理. 正是由于这个原因, 可抢占式调度要流行得多.在可抢占式调度这个大类中, 我们又可以分为<strong>静态(static)调度</strong>和<strong>动态(dynamic)调度</strong>. 这两类也是至今为止研究得最深入的调度算法. 静态调度有叫<strong>固定(fixed)调度</strong>, 它是指每一个任务的优先级在运行过程中是固定不变的. 在动态调度中, 每个任务没有固定的优先级,这意味着同一个任务产生的作业有可能是不同的优先级的. 静态调度的代表算法是<strong>速率单调(rate-monotonic, RM)调度.</strong> 动态调度的代表算法是<strong>最早时限优先(earliest-deadline first, EDF)调度</strong>和<strong>最小松弛度优先(least-laxity first)调度</strong>. </p>
+<p>任务的分类：</p>
+<ul>
+<li>周期任务（定期发生，比如雷达检测）</li>
+<li>非周期任务（突然性任务，偶尔会发生，发射导弹）</li>
+<li>sporadic任务（介于两者之间，虽然不周期性，但是会偶然发生）比如在高速上时不时会出现超速报警，时常发生却没有周期。</li>
+</ul>
+<p>首先我们先来介绍一些基本描述在系统当中任务的表达量</p>
+<ul>
+<li>Task number: <em>n</em> 任务个数</li>
+<li>Task: <em>Ti</em> ( <em>i</em>=1,2,…,<em>n</em> ) 每个任务的指代</li>
+<li>Period: Pi 每个任务的周期数即多长时间执行一次</li>
+<li>Executing time: ei 任务需要的执行时间</li>
+<li>Relative deadline: Di 相对的截止时间 由于按照周期执行，表示某一次周期运行任务的截止时间相对上一次周期运行任务截止时间</li>
+<li>Absolute deadline: di 绝对的截止时间 每次都必须在一个给定的时间完成 </li>
+<li>Phasing: Ii 初始相位这个参量在初始化的时候有点用，这里我们就不多考虑</li>
+</ul>
+<h4 id="1-RM算法"><a href="#1-RM算法" class="headerlink" title="1. RM算法"></a>1. RM算法</h4><p>​    RM就是速率(rate)单调的意思，即依据任务的速率来确定任务的优先级序列，内核调度程序将根据该优先级序列安排任务的具体执行和任务切换。</p>
+<p>​    <strong>任务的速率是任务周期的倒数</strong>。</p>
+<p>​    如何根据任务周期确定任务的优先级序列呢? RM调度算法规定:任务的周期越短，其优先级就越高;反之，任务的周期越长，其优先级就越低。这是RM算法的调度准则。</p>
+<p>首先采用RM算法调度任务之前，须满足以下条件</p>
+<ul>
+<li>所有的任务都是周期任务</li>
+<li>任务的相对截止II寸间等于任务周期</li>
+<li>任务在每个周期内的执行时间都是相等的，保持一个常量</li>
+<li>任务相互独屯，运行过程屮无须进行通信</li>
+<li>任务在运行过程无须互斥地访问共享资源</li>
+<li>任务可以在任何时刻被抢占，并且抢占的开销忽略不计</li>
+</ul>
+<p><img src="https://i.loli.net/2020/08/10/meTtuYFfhO1xILn.png" alt="image.png"></p>
+<p>其中U为CPU利用率，执行时间/周期</p>
+<p><img src="https://i.loli.net/2020/08/10/JpYN571mfXxr94P.png" alt="image.png"></p>
+<p>可知，当任务数很多时，可调度性上限无限仅为ln2。</p>
+<h4 id="2-EDF算法"><a href="#2-EDF算法" class="headerlink" title="2. EDF算法"></a>2. EDF算法</h4><p>​    RM调度算法无疑是一个成功的实时调度算法，它奠定了实时调度算法的基础。但是，当系统中任务数量较多时，其可调度性上限仅为ln2=0.69,该CPU利用率对大多数系统来说是很难接受的；此外，即使任务请求的CPU利用率小于1,但如果大于了给定的可调度性上限，仍 然可能造成任务的截止时间被错过。最后，RM调度算法还有一个假设条件:所有任务都是周期任务，而在现实的实时系统中，并非所有的任务都是周期运行的，如果假设不成立，如何确保任务的实时性呢?</p>
+<p>​    解决非周期任务调度的另一经典策略是EDF (Earliest Deadline First,最短截止时间优先) 算法。EDF算法依据任务的截止吋间来确定任务的优先级序列，内核调度程序将根据该优先级序列安排任务的具体执行和任务切换。</p>
+<p>​    <strong>EDF算法的调度准则是:任务的绝对截止时间越短，任 务优先级越高;任务的绝对截止时间越长，任务优先级越低。</strong></p>
+<p>​    当有新任务到达系统并进入就绪队列时，任务的优先级就可能需要动态调整。</p>
+<p>​    与基于固定优先级的静态调度算法RM相比，采用基于动态优先级调度的EDF算法的优点在于:EDF算法的可调度性上限为100%,使得CPU的计算能力能得到充分利用。但EDF调度算法也有缺点:在实时系统中，其可操作性不高，因为内核调度程序需要在系统运行过程中 动态地计算并确定任务的优先级，调度实现的开销较大。此外，在系统出现临时过载的情况下, EDF调度算法不能确定哪个任务的截止时间无法得到保障。为此，C. Liu和J. Layland等提出了一种混合调度策略，即大多数任务都采用RM算法进行调度，只有少量任务采用EDF算法调 度。尽管该策略不能令CPU的利用率达到100%,但却综合了两种调度算法的优点，使其变得 具有可操作性。</p>
+<h4 id="3-优先级反转及解决办法（优先级继承）"><a href="#3-优先级反转及解决办法（优先级继承）" class="headerlink" title="3. 优先级反转及解决办法（优先级继承）"></a>3. 优先级反转及解决办法（优先级继承）</h4><p>​    RM算法假设任务是相互独立的，且任务在任何时刻都能被抢占，但在实际系统中，任务之间往往存在-定的前驱后继关系，或者任务之间需要互斥访问共享资源。如果任务在运行过程中需要访问共享资源，会对RM算法造成什么影响呢? RM算法乂如何确保任务的可调度 性呢?</p>
+<p>​    如果某一高优先级任务需要访问某一共享资源，而该共享资源又正在被另一低优先级任务访问，则高优先级任务将被阻塞。阻塞使得高优先级任务必须等待低优先级的任务，如果阻塞时间过长，即使在CPU利用率比较低的情况下，也可能出现任务截止时间不能确保的情况。为了在系统中维持比较高的可调度性，需要通过一定的机制使发生任务阻塞的情况降到比较低的程度。</p>
+<p>​    在操作系统中，实现互斥资源访问的机制通常是信号量(semapone)、互斥量(mutex)、 锁 (lock)等。为保护共享资源的一致性，使用这些方法是必要的，但在RTOS中，应确保使 用这些方法后系统的实时性仍能得到满足。事实上，直接应用这些同步、互斥机制将导致系统 中出现优先级反转和较低可调度性的情况。下面看一个具体例子。</p>
+<p><img src="https://i.loli.net/2020/08/10/QYsKmzIFfUqtXd5.png" alt="image.png"></p>
+<p>在这个例子当中优先级排队为T1&gt;T2&gt;T3</p>
+<ul>
+<li>T3最先到达，并执行</li>
+<li>T1到达，打断</li>
+<li>由于T1无法访问互斥资源还给T3</li>
+<li>T2到达，打断T3</li>
+<li>T3访问完共享资源，T1访问</li>
+</ul>
+<p>这里的问题就是由于T1无法访问共享资源，导致T2优先级虽然低但是会先完成，会给算法带来不确定性</p>
+<p><strong>解决方案：优先级继承</strong></p>
+<p>​    优先级继承协议是指：当一个任务阻塞了一个或多个高优先级任务时，该任务将不使用原 来的优先级，而暂时使用被阻塞任务中的最高优先级作为执行临界区的优先级，当该任务退出 临界区时，再恢复到其最初优先级。</p>
+<p>​    在T1访问贡献资源失败的时候，把T3优先级临时转化为T1，防止T2的抢夺</p>
+<p><img src="https://i.loli.net/2020/08/10/VYkt7ew96Ig1dul.png" alt="image.png"></p>
+<p>在优先级继承协议中，高优先级任务在以下两种情况下可能被低优先级任务所阻塞。</p>
+<ul>
+<li>直接阻塞:如果高优先级任务要获得一个C被上锁的信号量，则该任务将被阻塞。</li>
+<li>间接阻塞:由低优先级任务继承了高优先级任务的优先级，使得中等优先级任务被原来分配的低优先级任务阻塞。这种阻塞是必需的，可用来避免高优先级任务被中等优先级任务间接抢占。</li>
+</ul>
+<h4 id="4-死锁及解决办法（优先级天花板）"><a href="#4-死锁及解决办法（优先级天花板）" class="headerlink" title="4. 死锁及解决办法（优先级天花板）"></a>4. 死锁及解决办法（优先级天花板）</h4><p>如果有更高的优先级也想访问共享区，就不断地升高T3地优先级。但这会带来新的问题：死锁</p>
+<p><img src="https://i.loli.net/2020/08/10/rO5W9BxypVDEnwh.png" alt="image.png"></p>
+<p><img src="https://i.loli.net/2020/08/10/gwXUfrnodi3QamR.png" alt="image.png"></p>
+<p><strong>解决方案：优先级天花板</strong></p>
+<p>​    优先级天花板是针对控制访问临界资源的信号量而设计的一种避免优先级反转的协议。信号量的优先级天花板为所有使用该信号量的任务的最高优先级。</p>
+<p>​    举个例子来说，假设有3个任务T1，T2，T3，其优先级序列为Priority(T1)〉Priority(T2)〉Priority(T3)), 任务运行过程中可能会访问4个临界资源S1,S2,S3,S4,任务需要访问的临界资源如下表所示</p>
+<p><img src="https://i.loli.net/2020/08/10/j9QUlzV2GvKIe4P.png" alt="image.png"></p>
+<p>​    根据优先级天花板的定义，临界资源S1的信号量的天花板是Priority(T1 )，临界资源S2的信 号量的天花板也是Priority(T1)，临界资源S3的信号量的天花板是Priority(T3),临界资源S4的信 号量的天花板是Priority(T2))。</p>
+<p>​    在使用优先级天花板协议时，如果任务获得信号量，则在任务执行临界区的过程中，任务的优先级被提升到所获得信号量的优先级天花板。该协议的具体要求如下： </p>
+<ul>
+<li>创建信号量时，设置信号量的优先级犬花板为可能中请该信号量的所有任务中的最高 优先级。</li>
+<li>如果某任务T成功获取信号量，则该任务的优先级将被临时提升到信号量的优先级天花板，直到其退出临界区，释放信号量，随后任务T的优先级将被恢复到最初优先级。</li>
+<li>如果任务T没有成功获取信号量，则它将被切换到阻塞状态。</li>
+</ul>
+<h3 id="四、如何在RTOS中完成任务切换？"><a href="#四、如何在RTOS中完成任务切换？" class="headerlink" title="四、如何在RTOS中完成任务切换？"></a>四、如何在RTOS中完成任务切换？</h3><p>​    在切换任务时，必须保存当前任务的环境，然后恢复将要执行任务的环境。当然对于不同的CPU，其环境的具体内容并不相同，但总体而言，一般会包括当前指令地址PC，当前堆栈地址SP，当前寄存器的值等信息。</p>
+<p>​    从就绪队列中找出优先级最高的任务后应止其执行，此时，如果内核刚启动，则调用 OSStartHighRdy()即可切换到优先级最高的任务:否则任务需要进行上下文切换(context switching)。上下文切换是指CPU被切换到另一个任务时需要保存当前任务的运行状态并恢复另一个任务的运行状态，当前运行的任务变为就绪(或者挂起、删除)状态，就绪队列中优先级最高的任务变为当前任务。任务上下文通过任务TCB表示，它包括任务状态、CPU各寄存器的值等信息。uC/OS II调用OS_TASK_SW()（在任务执行函数中执行的）或者OSIntCtxSw()切换到优先级最高的任务，OS_TASK_SW()被定义为OSCtxSw()即任务主动切换，OSIntCtxSw()属于中断导致任务被动切换。</p>
+<h4 id="1-任务主动切换OSCtxSw"><a href="#1-任务主动切换OSCtxSw" class="headerlink" title="1. 任务主动切换OSCtxSw()"></a>1. 任务主动切换OSCtxSw()</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">OSCtxSw</span><br><span class="line">;1.保存现场</span><br><span class="line">STMFD SP!, &#123;LR&#125; 				;	PC，此处的LR是调用OS_TASK_SW之前的程序指针PC</span><br><span class="line">STMFD SP!, &#123;R0-R12, LR&#125; ;	R0-R12 LR  ，此处的LR是任务环境中的连接寄存器LR，但在任务主动切换中，这两个LR是相等的</span><br><span class="line">												; 在中断导致的被动切换是不一样的		</span><br><span class="line">MRS RO, CPSR 						;	Push CPSR，MRS将状态寄存器的内容读到通用寄存器中</span><br><span class="line">STMFD SP!, &#123;RO&#125;					; STMFD表示将LR寄存器的值保存到SP地址指向的地方，并修改SP的值</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">;2.便于恢复现场，OSTCBCur-&gt;OSTCBStkPtr &#x3D; SP</span><br><span class="line">;将新的堆栈指针保存在旧任务的OSTCBStkPtr成员中，以便任务恢复执行时复原旧任务现场</span><br><span class="line">LDR RO, &#x3D;OSTCBCur     ;&#x3D;表示取变量的地址，LDR表示将后者赋值给前者</span><br><span class="line">LDR RO, [RO]					;[]表示取寄存器的内容</span><br><span class="line">STR SP, [RO] </span><br><span class="line"></span><br><span class="line">;3.这是一个钩子函数，供开发人员拓展，如增加代码以统计任务切换次数</span><br><span class="line">; OSTaskSwHook();</span><br><span class="line">BL OSTaskSwHook</span><br><span class="line"></span><br><span class="line">;4.将当前任务OSTCBCur指向就绪队列中优先级最高的任务OSTCBHighRdy</span><br><span class="line">;OSTCBCur &#x3D; OSTCBHighRdy</span><br><span class="line">LDR RO, &#x3D;OSTCBHighRdy </span><br><span class="line">LDR Rl, &#x3D;OSTCBCur</span><br><span class="line">LDR RO, [RO]</span><br><span class="line">STR RO, [Rl] </span><br><span class="line"></span><br><span class="line">;5.将当前任务的优先级设为就绪队列中的最高优先级</span><br><span class="line">;OSPrioCur &#x3D; OSPrioHighRdy;</span><br><span class="line">LDR R0f &#x3D;OSPrioHighRdy </span><br><span class="line">LDR Rlz &#x3D;OSPrioCur </span><br><span class="line">LDRB RO, [RO]</span><br><span class="line">STRB RO, [Rl]</span><br><span class="line"></span><br><span class="line">;6.把就绪队列中优先级最高的任务OSTCBHighRdy的堆栈指针OSTCBStkPtr送入SP中，供新任务进行现场恢复</span><br><span class="line">; OSTCBHighRdy-&gt;OSTCBStkPtr;</span><br><span class="line">LDR RO, &#x3D;OSTCBHighRdy</span><br><span class="line">LDR RO, [RO]</span><br><span class="line">LDR SP, [R0]</span><br><span class="line"></span><br><span class="line">;7.恢复抢占任务（高优先级任务）的现场</span><br><span class="line">;Restore new task context</span><br><span class="line">LDMFD SP!, &#123;RO&#125; ;POP CPSR</span><br><span class="line">MSR SPSR_cxsf, RO</span><br><span class="line">LDMFD SP!z &#123;R0-R12, LR, PC&#125;^</span><br></pre></td></tr></table></figure>
+
+<p>我们用文字和图11相结合来描述该过程即为：</p>
+<p>(1) 依次保存ARM 2440处理器的PC、LR、R12、R11、…、R0、CPSR等16个寄存器到被抢占任务的堆栈中，堆栈的栈顶指针为最初R13(SP)指向的地址，该SP值是上一次任务切换 时，根据任务TCB的*OSTCBStkPtr 成员确定的。</p>
+<p>(2) 如果16个寄存器的信息均被保存，则R13(SP)指向CPSR所在的内存地址。此时，将 新的 R13(SP)保存到 OSTCBCur-&gt;OSTCBStkPtr 中，OSTCBCur-&gt;OSTCBStkPtr 等于新的 R13(SP)值。</p>
+<p>(3) 将抢占任务(高优先级任务)的堆栈地址(OSTCBHighRdy-&gt;OSTCBStkPt)传给处理器的 R13(SP)寄存器。此时，SP指向高优先级任务堆栈中CPSR所在的内存地址。</p>
+<p>(4) 将抢占任务运行环境从R13(SP)指向的内存地址依次恢复到CPU的CPSR、R0、 R1…、R12、LR、PC寄存器中。此时，SP指向堆栈的栈顶,供下次切换时保存环境。</p>
+<p><img src="https://i.loli.net/2020/08/10/M8CYQpfZz9SD7T1.png" alt="image.png"></p>
+<center>图11 任务切换</center>
+
+<h4 id="2-中断导致任务被动切换OSIntCtxSw"><a href="#2-中断导致任务被动切换OSIntCtxSw" class="headerlink" title="2. 中断导致任务被动切换OSIntCtxSw()"></a>2. 中断导致任务被动切换OSIntCtxSw()</h4><p>​    如果是中断引发任务切换，例如，一个低优先级的任务正在运行，用户通过中断创建一个新任务，而新任务的优先级高于当前运行任务的优先级，显然，低优先级任务将被高优先级任务抢占，此时，第一个保存的LR是中断模式下的程序指针PC,第二个保存的LR是旧任务的LR,故两个LR不相等。造成这种情况的原因是ARM有7种工作模式:用户(user)模式、快速中断(FIQ)模式、外部中断(IRQ)模式、管理(supervisor) 模式、数据访问中止(abort)模式、系统(system)模式、未定义(undefined)模式。具体而言，中断发生前，处理器工作在系统/用户模式，中断发生后，处理器自动切换到外部中断模式，而不同模式下寄存器的分配和使用是不同的。此时的任务切换工作是由OSIntCtxSw完成的，中断触发的任务切换和任务主动触发的切换过程大体一致，这里就不详细赘述了。</p>
+<h3 id="五、中断和时间管理"><a href="#五、中断和时间管理" class="headerlink" title="五、中断和时间管理"></a>五、中断和时间管理</h3><p>​    在上面我们有提到中断导致任务被动切换，这可以认为是一种内部中断，那么当我们按下键盘，因外部原因而改变程序运行流程呢？这就是我们马上要提到的硬中断，其定义为<strong>硬中断是传统意义上的中断，也称外部中断，是由于CPU外部原因而改变程序运行流程的过程。硬中断的触发及响应属于异步事件</strong>。</p>
+<h4 id="1-临界代码段保护方式"><a href="#1-临界代码段保护方式" class="headerlink" title="1. 临界代码段保护方式"></a>1. 临界代码段保护方式</h4><p>​    在第二部分第一小节任务创建代码中</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">INT8U <span class="title">OSTaskCreate</span> <span class="params">(<span class="keyword">void</span> (*task) (<span class="keyword">void</span> *p_d) , <span class="keyword">void</span> p*_arg, OS_STK *ptos, INT8U prio)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	OS_STK *psp;</span><br><span class="line">  INT8U err;</span><br><span class="line">  </span><br><span class="line"> <span class="comment">/*为 CPU 状态寄存器分配空间,等于3表示选择第三种保护临界代码段的方法，共有三种*/</span> </span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> OS_CRITICAL_METHOD == 3 </span></span><br><span class="line">  OS_CPU_SR cpu_sr = <span class="number">0</span>;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>在访问临界代码段时，需要关中断和开中断操作，分别为OS_ENTER_CRITICAL()和OS_EXIT_CRITICAL()。它们共有三种实现方式，采用何种实现方式可以通过OS_CRIT1CAL_METHOD定义的值决定，这里我们是采用的第三种方式，那么一共有哪三种中断方式呢？</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">if</span>  OS_CRITICAL_METHOD==1 </span></span><br><span class="line">     <span class="meta">#<span class="meta-keyword">define</span>  OS_ENTER_CRITICAL()     (Cli()) <span class="comment">//关中断</span></span></span><br><span class="line">     <span class="meta">#<span class="meta-keyword">define</span>  OS_EXIT_CRITICAL()      (Sti()) <span class="comment">//开中断</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#elseif   OS_CRITICAL_METHOD == 2  </span></span><br><span class="line">     <span class="meta">#<span class="meta-keyword">define</span>  OS_ENTER_CRITICAL()    (PushAndCli())  </span></span><br><span class="line">     <span class="meta">#<span class="meta-keyword">define</span>  OS_EXIT_CRITICAL()     (Pop()) </span></span><br><span class="line"></span><br><span class="line"><span class="meta">#elseif   OS_CRITICAL_METHOD == 3  </span></span><br><span class="line">     <span class="meta">#<span class="meta-keyword">define</span>  OS_ENTER_CRITICAL()  (cpu_sr = OSCPUSaveSR())</span></span><br><span class="line">     <span class="meta">#<span class="meta-keyword">define</span>  OS_EXIT_CRITICAL()   (OSCPURestoreSR(cpu_sr))</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>三种方式的表达如下</p>
+<p><strong>方式1：使用处理器指令开关中断</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Cli                                                                         </span><br><span class="line">    MRS     R0,CPSR </span><br><span class="line">    ORR     R1,R0,#0x80 </span><br><span class="line">    MSR     CPSR_c,R1</span><br><span class="line">    MOV     PC,LR </span><br><span class="line"></span><br><span class="line">Sti</span><br><span class="line">    MRS     R0,CPSR</span><br><span class="line">    AND     R1,R0,#0xffffff7f </span><br><span class="line">    MSR     CPSR_c,R1</span><br><span class="line">    MOV     PC,LR</span><br></pre></td></tr></table></figure>
+
+<p>直接在CPSR的基础上把中断INTA直接关掉，在关掉的时候直接开启。这种方式虽然简单高效，但无法处理嵌套的情况。如果有两层临界区保护，在退出内层临界区 时就会开中断，使外层的临界区也失去保护，很少使用。</p>
+<p><strong>方式2：堆栈方式保存中断</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PushAndCli</span><br><span class="line">     MRS       R0,CPSR_c  </span><br><span class="line">     STMFD     sp!,R0 </span><br><span class="line">     ORR       R1,R0,#0x80 </span><br><span class="line">     MSR      CPSR_c,R1 </span><br><span class="line">     MOV      PC,LR</span><br><span class="line"></span><br><span class="line">Pop</span><br><span class="line">     LDMFD   sp!,R0</span><br><span class="line">     MSR      CPSR_c,R0</span><br></pre></td></tr></table></figure>
+
+<p>即先在OS_ENTER_CRITICAL()时将中断状态入栈，再关中断，在 OS_EXIT_CRITICAL()时将中断状态出栈。这种方式避免了第一种方式的缺陷，保存了关中断之前程序当前状态寄存器的状态。</p>
+<p><strong>方式3 通过局部变量的方式</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">OSCPUSaveSR</span><br><span class="line">	MRS     R0, CPSR</span><br><span class="line">	ORR     R1, R0, #0x80 </span><br><span class="line">	MSR     CPSR_c, R1</span><br><span class="line">	MOV     PC, LR			     </span><br><span class="line"></span><br><span class="line">OSCPURestoreSR</span><br><span class="line">	MSR     CPSR_c, R0</span><br><span class="line">	MOV     PC, LR</span><br></pre></td></tr></table></figure>
+
+<p>把内容保存在每个堆栈当中进行保存，不用一个统一的堆栈进行保存。即每个TCB保存之前的状态（感觉这里说的好像有点小问题） 其实就是构造一个类似链表的东西</p>
+<h4 id="2-ARM的中断机制"><a href="#2-ARM的中断机制" class="headerlink" title="2. ARM的中断机制"></a>2. ARM的中断机制</h4><p>​    在这里我们以ARM 9处理器来讲解它的中断机制，ARM 9处理器并未像8086那样设计中断机制和中断向量表，而是定义了一套异常机制和 异常向量表。异常向量表位于启动代码的最开头。例如，三星公司的S3C2440A1441芯片在发生异常时，会通过硬件机制将PC的值自动调转到主存的最开头去寻找异常向量表。ARM 9处理 器一共定义了 7种异常:<strong>复位异常、未定义指令异常、软中断异常、预取指终止异常、数据终 止异常、IRQ中断异常和FIQ快速中断异常</strong>。</p>
+<p>​    在以上7 种运行模式中，有两个模式对应于中断:<strong>IRQ中断模式和FIQ快中断模式</strong>。快中断的优先级比一般中断高。当发生中断和快中断时，PC将会跳转到指定的地址开始执行，这就为发生中断后执行相应的中断服务提供了可能。</p>
+<p>​    异常向量表（图12）全部是汇编语言的跳转指令，这些指令从内存的零地址开始，连续存储在内存中。当发生对应的异常时，PC将通过硬件机制跳转到相应异常在异常向量表中的地址开始执行。因此当产生异常时，所有跳转的地址都是在CPU芯片生产时就确定且无法更改的(也有些芯片生产商提供可编程的异常向量表，以通过代码即软件的方式，改变异常向量表的初始地址)，并且这些跳转指令都是独立的跳转指令，无法在原地实现中断服务，这也是异常向量表中的代码全是跳转指令的原因。这样，当产生异常时，通过硬件跳转到一个确定的地址，再通过跳转指令跳 转到个异常处理的代码起始地址。</p>
+<p><img src="https://i.loli.net/2020/08/10/FJzZy3SawhoL2cp.png" alt="image.png"></p>
+<center> 图12</center>
+
+<p>图中的标志符 Reset、Undef. SWI、PreAbort、DataAbort. IRQ 和 FIQ 都代表了一个地址，该地址就是跳转指令需要跳转的地址。</p>
+<h4 id="3-时间管理"><a href="#3-时间管理" class="headerlink" title="3. 时间管理"></a>3. 时间管理</h4><p>​    在RTOS中，时钟具有非常重要的作用，相当于RTOS的心跳，通过时钟可实现延时任务、周期性触发任务执行、 任务有限等待的计时、软定时器的定时管理、确认超时以及与时间相关的调度操作，如时间片 轮转调度等。</p>
+<p>​    大多数嵌入式系统有两种时钟源,分别为实时时钟(Real-Time Clock, RTC)和定时器/计数器。实时时钟一般靠电池供电，即使系统断电,也可以维持日期和时间，独立于操作系统，又被称为硬件时钟，这里我们不过多赘述。这里我们重点解释定时器/计数器：</p>
+<p>​    根据硬件的不同，嵌入式系统的时钟源可以是专门的硬件定时器，也可以是来自交流电 (AC)的50/60 Hz信号频率。定时器一般由晶体振荡器(crystal osillator)提供周期信号源，并通过程序对其计数寄存器进行设置，使其产生固定周期的脉冲，而每次脉冲的产生都将触发一个时钟中断。时钟中断的频率既是系统的心跳，也叫时基或tick, tick的大小决定了整个系统的时间粒度。对于RTOS而言，时基一般为10〜100次/s甚至更高。以图13为例，晶体振荡器提供周期信号源，它通过总线(bus)连接到CPU核(CPU Core)上，开发人员可编程设定计数寄存器的初始值，随后，每一个晶体振荡器输入信号都会导致该值增加，当计数寄存器溢出时，就产生一个输出脉冲(pulse),输出脉冲可以用来触发CPU核上的一个中断。输出脉冲 是RTOS时钟的硬件基础，它将被送到中断控制器上，产生中断信号，触发时钟中断，由时钟 中断服务程序维持系统时钟的正常工作。</p>
+<p><img src="https://i.loli.net/2020/08/10/7toYqEZ2uBxkcVm.png" alt="image.png"></p>
+<center> 图13</center>
+
+<h3 id="六、互斥量和信号量"><a href="#六、互斥量和信号量" class="headerlink" title="六、互斥量和信号量"></a>六、互斥量和信号量</h3><h4 id="1-互斥量（Mutex）"><a href="#1-互斥量（Mutex）" class="headerlink" title="1. 互斥量（Mutex）"></a>1. 互斥量（Mutex）</h4><p>​     Mutex本质上说就是一把锁，提供对资源的独占访问，所以Mutex主要的作用是用于互斥。Mutex对象的值，只有0和1两个值。这两个值也分别代表了Mutex的两种状态。值为0, 表示锁定状态，当前对象被锁定，用户进程/线程如果试图Lock临界资源，则进入排队等待；值为1，表示空闲状态，当前对象为空闲，用户进程/线程可以Lock临界资源，之后Mutex值减1变为0。</p>
+<p><strong>互斥型信号量和二进制信号量的区别</strong></p>
+<ul>
+<li><p>互斥型信号量必须是同一个任务申请，同一个任务释放，其他任务释放无效。同一个任务可以递归申请</p>
+</li>
+<li><p>二进制信号量，一个任务申请成功后，可以由另一个任务释放。</p>
+</li>
+</ul>
+<p>二进制信号量实现任务互斥：</p>
+<pre><code>打印机资源只有一个，abc三个任务共享，当a取得使用权后，为了防止其他任务错误地释放了信号量()，必须将打印机房的门关起来(进入临界段)，用完后，释放信号量，再把门打开(出临界段)，其他任务再进去打印。(而互斥型信号量由于必须由取得信号量的那个任务释放，故不会出现其他任务错误地释放了信号量的情况出现，故不需要有临界段。互斥型信号量是二进制信号量的子集。)</code></pre><p> 二进制信号量实现任务同步：</p>
+<pre><code>a任务一直等待信号量，b任务定时释放信号量，完成同步功能</code></pre><h4 id="2-信号量（Semaphore）"><a href="#2-信号量（Semaphore）" class="headerlink" title="2. 信号量（Semaphore）"></a>2. 信号量（Semaphore）</h4><p>​    信号量(Semaphore)，有时被称为信号灯，是在多线程环境下使用的一种设施, 它负责协调各个线程,以保证它们能够正确、合理的使用公共资源。</p>
+<pre><code>信号量可以分为几类：</code></pre><ul>
+<li>二进制信号量(binary semaphore)</li>
+</ul>
+<p>​    只允许信号量取0或1值，其同时只能被一个线程获取。</p>
+<ul>
+<li>整型信号量（integer semaphore)</li>
+</ul>
+<p>​    信号量取值是整数，它可以被多个线程同时获得，直到信号量的值变为0。</p>
+<ul>
+<li>记录型信号量（record semaphore)</li>
+</ul>
+<p>​    每个信号量s除一个整数值value（计数）外，还有一个等待队列List，其中是阻塞在该信号量的各个线程的标识。当信号量被释放一个，值被加一后，系统自动从等待队列中唤醒一个等待中的线程，让其获得信号量，同时信号量再减一。</p>
+<p>​    信号量通过一个计数器控制对共享资源的访问，信号量的值是一个非负整数，所有通过它的线程都会将该整数减一。如果计数器大于0，则访问被允许，计数器减1；如果为0，则访问被禁止，所有试图通过它的线程都将处于等待状态。</p>
+<p>​    计数器计算的结果是允许访问共享资源的通行证。因此，为了访问共享资源，线程必须从信号量得到通行证， 如果该信号量的计数大于0，则此线程获得一个通行证，这将导致信号量的计数递减，否则，此线程将阻塞直到获得一个通行证为止。当此线程不再需要访问共享资源时，它释放该通行证，这导致信号量的计数递增，如果另一个线程等待通行证，则那个线程将在那时获得通行证。</p>
+<h4 id="3-互斥量和信号量的区别"><a href="#3-互斥量和信号量的区别" class="headerlink" title="3.互斥量和信号量的区别"></a>3.互斥量和信号量的区别</h4><ol>
+<li>互斥量用于线程的互斥，信号量用于线程的同步</li>
+</ol>
+<p>​    这是互斥量和信号量的根本区别，也就是互斥和同步之间的区别。</p>
+<ol start="2">
+<li><p>互斥量无法保证线程对资源的有序访问，信号量可以。</p>
+<p><strong>互斥</strong></p>
+<p>​     是指某一资源同时只允许一个访问者对其进行访问，具有唯一性和排它性。但互斥无法限制访问者对资源的访问顺序，即访问是无序的。（cute：好比一个别墅，同时只能卖个一个人。这个人可以在门上加上任意多的锁（申请多次），但是锁必须由这个人打开，因为只有他掌握着钥匙。如果别的人真的想控制这个别墅的大门，则它首先应该把这个别墅买下来（别墅的主人放弃所有权））</p>
+<p><strong>同步</strong></p>
+<p>​    是指在互斥的基础上（大多数情况），通过其它机制实现访问者对资源的有序访问。在大多数情况下，同步已经实现了互斥，特别是所有写入资源的情况必定是互斥的。少数情况是指可以允许多个访问者同时访问资源 （cute：相当于图书馆阅览室的书卡，你申请的时候-1，另一个人还的时候则可以+1，我们都可以修改书卡的当前可用数目，这个权利是不独属于任何人的。）</p>
+</li>
+<li><p>互斥量值只能为0/1，信号量值可以为非负整数。</p>
+<p>​   也就是说，一个互斥量只能用于一个资源的互斥访问，它不能实现多个资源的多线程互斥问题。信号量可以实现多个同类资源的多线程互斥和同步。当信号量为单值信号量时，也可以完成一个资源的互斥访问。</p>
 </li>
 </ol>
-<h3 id="二、如何在-us-OS-II-中创建一个任务？"><a href="#二、如何在-us-OS-II-中创建一个任务？" class="headerlink" title="二、如何在 us/OS II 中创建一个任务？"></a>二、如何在 us/OS II 中创建一个任务？</h3><h3 id="三、如何在就绪队列中调度任务？"><a href="#三、如何在就绪队列中调度任务？" class="headerlink" title="三、如何在就绪队列中调度任务？"></a>三、如何在就绪队列中调度任务？</h3><h3 id="四、如何在（uc-OS-II-ARM-2440）中切换任务？"><a href="#四、如何在（uc-OS-II-ARM-2440）中切换任务？" class="headerlink" title="四、如何在（uc/OS II+ ARM 2440）中切换任务？"></a>四、如何在（uc/OS II+ ARM 2440）中切换任务？</h3><h3 id="五、什么事情会触发上下文切换？"><a href="#五、什么事情会触发上下文切换？" class="headerlink" title="五、什么事情会触发上下文切换？"></a>五、什么事情会触发上下文切换？</h3>
+<ol start="4">
+<li>互斥量的加锁和解锁必须由同一线程分别对应使用，信号量可以由一个线程释放，另一个线程得到。</li>
+</ol>
+
     
 
     
@@ -472,7 +732,7 @@ A task is an infinite loop function. it looks just like any other C function con
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#任务管理"><span class="toc-number">1.</span> <span class="toc-text">任务管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、如何描述一个任务？"><span class="toc-number">1.1.</span> <span class="toc-text">一、如何描述一个任务？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、如何在-us-OS-II-中创建一个任务？"><span class="toc-number">1.2.</span> <span class="toc-text">二、如何在 us&#x2F;OS II 中创建一个任务？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、如何在就绪队列中调度任务？"><span class="toc-number">1.3.</span> <span class="toc-text">三、如何在就绪队列中调度任务？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、如何在（uc-OS-II-ARM-2440）中切换任务？"><span class="toc-number">1.4.</span> <span class="toc-text">四、如何在（uc&#x2F;OS II+ ARM 2440）中切换任务？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五、什么事情会触发上下文切换？"><span class="toc-number">1.5.</span> <span class="toc-text">五、什么事情会触发上下文切换？</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#嵌入式实时操作系统原理RTOS"><span class="toc-number">1.</span> <span class="toc-text">嵌入式实时操作系统原理RTOS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、如何描述一个任务？"><span class="toc-number">1.1.</span> <span class="toc-text">一、如何描述一个任务？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-概述"><span class="toc-number">1.1.1.</span> <span class="toc-text">1. 概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-代码描述"><span class="toc-number">1.1.2.</span> <span class="toc-text">2.代码描述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-任务和进程之间的区别？"><span class="toc-number">1.1.3.</span> <span class="toc-text">3. 任务和进程之间的区别？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-任务控制块—TCB-amp-优先级位图法"><span class="toc-number">1.1.4.</span> <span class="toc-text">4. 任务控制块—TCB &amp; 优先级位图法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、如何在-us-OS-II-中创建一个任务？"><span class="toc-number">1.2.</span> <span class="toc-text">二、如何在 us&#x2F;OS II 中创建一个任务？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-任务创建代码"><span class="toc-number">1.2.1.</span> <span class="toc-text">1.任务创建代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-任务堆栈的初始化，通过OSTaskStkInit-实现"><span class="toc-number">1.2.2.</span> <span class="toc-text">2. 任务堆栈的初始化，通过OSTaskStkInit()实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-TCB的初始化"><span class="toc-number">1.2.3.</span> <span class="toc-text">3. TCB的初始化</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、任务调度算法"><span class="toc-number">1.3.</span> <span class="toc-text">三、任务调度算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-RM算法"><span class="toc-number">1.3.1.</span> <span class="toc-text">1. RM算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-EDF算法"><span class="toc-number">1.3.2.</span> <span class="toc-text">2. EDF算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-优先级反转及解决办法（优先级继承）"><span class="toc-number">1.3.3.</span> <span class="toc-text">3. 优先级反转及解决办法（优先级继承）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-死锁及解决办法（优先级天花板）"><span class="toc-number">1.3.4.</span> <span class="toc-text">4. 死锁及解决办法（优先级天花板）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、如何在RTOS中完成任务切换？"><span class="toc-number">1.4.</span> <span class="toc-text">四、如何在RTOS中完成任务切换？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-任务主动切换OSCtxSw"><span class="toc-number">1.4.1.</span> <span class="toc-text">1. 任务主动切换OSCtxSw()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-中断导致任务被动切换OSIntCtxSw"><span class="toc-number">1.4.2.</span> <span class="toc-text">2. 中断导致任务被动切换OSIntCtxSw()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#五、中断和时间管理"><span class="toc-number">1.5.</span> <span class="toc-text">五、中断和时间管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-临界代码段保护方式"><span class="toc-number">1.5.1.</span> <span class="toc-text">1. 临界代码段保护方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-ARM的中断机制"><span class="toc-number">1.5.2.</span> <span class="toc-text">2. ARM的中断机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-时间管理"><span class="toc-number">1.5.3.</span> <span class="toc-text">3. 时间管理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#六、互斥量和信号量"><span class="toc-number">1.6.</span> <span class="toc-text">六、互斥量和信号量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-互斥量（Mutex）"><span class="toc-number">1.6.1.</span> <span class="toc-text">1. 互斥量（Mutex）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-信号量（Semaphore）"><span class="toc-number">1.6.2.</span> <span class="toc-text">2. 信号量（Semaphore）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-互斥量和信号量的区别"><span class="toc-number">1.6.3.</span> <span class="toc-text">3.互斥量和信号量的区别</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
